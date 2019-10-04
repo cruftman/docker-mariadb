@@ -1,0 +1,12 @@
+# Editor junk, backup files
+*.swp
+*.bkp
+*.bak
+*~
+
+# Temporary directory
+.tmp/
+tmp/
+
+# Compiled python files
+*.py[co]
