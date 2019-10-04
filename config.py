@@ -1,6 +1,6 @@
 import itertools
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 def xrepr(arg):
     if isinstance(arg, str):
@@ -82,8 +82,7 @@ def get_tags(db, os):
 
 def get_context_files(db, os):
     return {'Dockerfile.in': 'Dockerfile',
-            'hooks/build.in': 'hooks/build',
-            'README.md.in': 'README.md'}
+            'hooks/build.in': 'hooks/build'}
 
 
 def get_microbadges_str_for_tag(tag):
