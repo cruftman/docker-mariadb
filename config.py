@@ -1,6 +1,6 @@
 import itertools
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 def xrepr(arg):
     if isinstance(arg, str):
@@ -82,7 +82,8 @@ def get_tags(db, os):
 
 def get_context_files(db, os):
     return {'Dockerfile.in': 'Dockerfile',
-            'hooks/build.in': 'hooks/build' }
+            'hooks/build.in': 'hooks/build',
+            'README.md.in': 'README.md'}
 
 
 def get_microbadges_str_for_tag(tag):
@@ -150,7 +151,9 @@ def get_circle_workflow_jobs_str(matrix):
 
 
 def get_common_subst():
-    return dict({ 'GENERATED_WARNING' : get_generated_warning(),
+    matrix = get_matrix()
+    return dict({ 'MICROBADGES' : get_microbadges_str(matrix),
+                  'GENERATED_WARNING' : get_generated_warning(),
                   'VERSION': __version__ })
 
 
@@ -167,7 +170,6 @@ def get_context_subst(db, os):
 def get_global_subst():
     matrix = get_matrix()
     return dict(get_common_subst(), **dict({
-            'MICROBADGES': get_microbadges_str(matrix),
             'CIRCLE_JOBS': get_circle_jobs_str(matrix),
             'CIRCLE_WORKFLOW_JOBS': get_circle_workflow_jobs_str(matrix)
         }))
