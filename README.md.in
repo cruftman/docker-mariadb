@@ -1,0 +1,26 @@
+# cruftman/docker-mariadb
+
+Docker container with MariaDB for Cruftman project.
+
+[![](https://img.shields.io/docker/stars/cruftman/mariadb.svg)](https://hub.docker.com/r/cruftman/mariadb/ "Docker Stars")
+[![](https://img.shields.io/docker/pulls/cruftman/mariadb.svg)](https://hub.docker.com/r/cruftman/mariadb/ "Docker Pulls")
+
+
+## Image versions
+
+@MICROBADGES@
+
+## Details
+
+### Initial database
+
+The container comes with pre-initialized MariaDB installation which includes
+single, *empty* database:
+
+- **database**: ``cruftman``
+- **user**: ``cruftman``
+- **password**: ``cruftman``
+
+### Build arguments & environment variables
+
+Nothing special here.

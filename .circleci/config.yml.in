@@ -1,0 +1,39 @@
+@GENERATED_WARNING@
+version: 2.1
+
+executor: &executor
+  docker:
+    - image: circleci/python:3.7
+
+build_steps: &build_steps
+  steps:
+    - checkout
+    - run:
+        name: Check if our source tree is in sync
+        command: .circleci/check-source-updated
+
+    - setup_remote_docker
+
+    - run:
+        name: Build the image
+        command: (cd $DOCKERFILE_PATH && hooks/build)
+
+    - run:
+        name: Upload the image
+        command: .circleci/upload
+
+env_common: &env_common
+  DOCKER_REPO: cruftman/mariadb
+  DOCKER_UPLOAD_SKIP: false
+
+
+jobs:
+
+  @CIRCLE_JOBS@
+
+workflows:
+  version: 2.1
+
+  build_images:
+    jobs:
+      @CIRCLE_WORKFLOW_JOBS@

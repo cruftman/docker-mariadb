@@ -1,0 +1,61 @@
+#############################################################################
+# NOTE: FILE GENERATED AUTOMATICALLY, DO NOT EDIT!!!
+#############################################################################
+
+version: 2.1
+
+executor: &executor
+  docker:
+    - image: circleci/python:3.7
+
+build_steps: &build_steps
+  steps:
+    - checkout
+    - run:
+        name: Check if our source tree is in sync
+        command: .circleci/check-source-updated
+
+    - setup_remote_docker
+
+    - run:
+        name: Build the image
+        command: (cd $DOCKERFILE_PATH && hooks/build)
+
+    - run:
+        name: Upload the image
+        command: .circleci/upload
+
+env_common: &env_common
+  DOCKER_REPO: cruftman/mariadb
+  DOCKER_UPLOAD_SKIP: false
+
+
+jobs:
+
+  build_10_3_bionic:
+    <<: *executor
+    environment:
+      <<: *env_common
+      DOCKERFILE_PATH: 10.3/bionic
+      IMAGE_NAME: cruftman/mariadb:10.3-bionic
+      DOCKER_TAG: 10.3-bionic,10.3
+    <<: *build_steps
+
+  build_10_4_bionic:
+    <<: *executor
+    environment:
+      <<: *env_common
+      DOCKERFILE_PATH: 10.4/bionic
+      IMAGE_NAME: cruftman/mariadb:10.4-bionic
+      DOCKER_TAG: 10.4-bionic,10-bionic,10.4,bionic,10,latest
+    <<: *build_steps
+
+workflows:
+  version: 2.1
+
+  build_images:
+    jobs:
+      - build_10_3_bionic:
+          context: cruftman-docker
+      - build_10_4_bionic:
+          context: cruftman-docker

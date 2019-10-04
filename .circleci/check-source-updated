@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+
+if [ "$CI" != "true" ] || [ "$CIRCLECI" != "true" ]; then
+  echo 'error: running outside of circleci. Exiting.' >&2;
+  exit 1;
+fi
+
+if [ ! -z "`git status --porcelain`" ]; then
+  echo 'error: local modifications detected. Can not perform check.' >&2;
+  exit 1;
+fi
+
+python update.py --delete
+
+if [ ! -z "`git status --porcelain`" ]; then
+  echo 'error: source out of date, somebody forgot to run update.py before last commit!' >&2;
+  exit 1;
+fi

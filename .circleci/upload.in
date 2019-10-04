@@ -1,0 +1,39 @@
+#!/bin/bash
+
+if [ "$DOCKER_SKIP_UPLOAD" = "true" ]; then
+  echo 'skipping docker upload ($DOCKER_SKIP_UPLOAD set)';
+  exit 0;
+fi
+
+if [ "$CIRCLECI" = "true" ] && [ "$CIRCLE_BRANCH" != "master" ]; then
+  echo 'skipping docker upload ($CIRCLECI_BRANCH != master)'
+  exit 0;
+fi
+
+if ! git tag --points-at HEAD | grep -qFw '@VERSION@'; then
+  echo 'skipping docker upload (HEAD is not tagged as "@VERSION@")'
+  exit 0;
+fi
+
+if [ -z "$DOCKERHUB_USER" ] || [ -z "$DOCKERHUB_TOKEN" ]; then
+  echo 'error: dockerhub user or token not provided.' >&2;
+  exit 1;
+fi
+
+if [ -z "$DOCKER_REPO" ]; then
+  echo 'error: $DOCKER_REPO not set.' >&2;
+  exit 1;
+fi;
+
+if [ -z "$DOCKER_TAG" ]; then
+  echo 'error: $DOCKER_TAG not set.' >&2;
+  exit 1;
+fi;
+
+echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
+
+for T in ${DOCKER_TAG//,/ }; do
+  docker push "$DOCKER_REPO:$T";
+done
+
+docker logout

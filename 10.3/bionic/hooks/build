@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#############################################################################
+# NOTE: FILE GENERATED AUTOMATICALLY, DO NOT EDIT!!!
+#############################################################################
+
+
+# $TFLAGS is a string of the form "-t repo:tag1 -t repo:tag2 ..." generated
+#         out of $DOCKER_REPO and $DOCKER_TAG; this way we handle multi-tag
+#         Dockerhub's builds.
+
+TFLAGS=`echo $DOCKER_TAG | sed -e "s#\\s*\\(^\\|,\\)\\s*# -t $DOCKER_REPO:#g"`
+
+docker build --build-arg VCS_REF=`git rev-parse --short HEAD` \
+             --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+             --build-arg VERSION="0.1.0" \
+             $TFLAGS \
+             .
