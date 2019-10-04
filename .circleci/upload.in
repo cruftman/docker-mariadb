@@ -37,3 +37,22 @@ for T in ${DOCKER_TAG//,/ }; do
 done
 
 docker logout
+
+
+#
+# Push README.md
+#
+
+# Acquire token
+README_FILEPATH="README.md"
+DOCKERHUB_API_URL="https://hub.docker.com/v2"
+LOGIN_PAYLOAD="{\"username\": \"${DOCKERHUB_USER}\", \"password\": \"${DOCKERHUB_TOKEN}\"}"
+TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "${LOGIN_PAYLOAD}" "${DOCKERHUB_API_URL}/users/login/" | jq -r .token)
+REPO_URL="${DOCKERHUB_API_URL}/repositories/${DOCKER_REPO}/"
+RESPONSE_CODE=$(curl -s --write-out %{response_code} --output /dev/null -H "Authorization: JWT ${TOKEN}" -X PATCH --data-urlencode full_description@@${README_FILEPATH} ${REPO_URL})
+
+if [ $RESPONSE_CODE -eq 200 ]; then
+  exit 0
+else
+  exit 1
+fi
