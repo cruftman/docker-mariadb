@@ -10,8 +10,8 @@ if [ "$CIRCLECI" = "true" ] && [ "$CIRCLE_BRANCH" != "master" ]; then
   exit 0;
 fi
 
-if ! git tag --points-at HEAD | grep -qFw '0.1.1'; then
-  echo 'skipping docker upload (HEAD is not tagged as "0.1.1")'
+if ! git tag --points-at HEAD | grep -qFw '0.1.2'; then
+  echo 'skipping docker upload (HEAD is not tagged as "0.1.2")'
   exit 0;
 fi
 
